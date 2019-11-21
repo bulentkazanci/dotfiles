@@ -1,0 +1,9 @@
+[user]
+  name = Buelent Rahim Kazanci
+  email = kazancibulent@gmail.com
+[color]
+  ui = auto
+[github]
+  user = bulentrahimkazanci 
+[push]
+	default = tracking
