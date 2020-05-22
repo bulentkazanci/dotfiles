@@ -1,7 +1,5 @@
 install:
-	brew bundle
 	@./setup.sh
-
 
 copy:
 	[ -f ~/.gitconfig ] || ln -s $(PWD)/gitconfig ~/.gitconfig

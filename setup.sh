@@ -1,5 +1,26 @@
 #!/bin/bash
 
+# Check if Homebrew is installed
+if test ! $(which brew); then
+  /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+fi
+
+# Update Homebrew
+brew update
+
+# Install all our dependencies with bundle (See Brewfile)
+brew tap homebrew/bundle
+brew bundle
+
+# ==============
+#   Directories
+# ==============
+if [ ! -d "$HOME/Brkdev" ] 
+then
+  mkdir $HOME/Brkdev
+fi
+
+
 # ==============
 #   oh-my-zsh
 # ==============
