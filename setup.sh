@@ -31,6 +31,16 @@ rm install.sh
 
 
 # ==============
+#   zsh plugins
+# ==============
+if [ ! -d "${HOME}/.zsh" ]; then
+	echo " ==> Installing zsh plugins"
+	git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "${HOME}/.zsh/zsh-syntax-highlighting"
+	git clone https://github.com/bhilburn/powerlevel9k.git "${HOME}/.zsh/powerlevel9k"
+fi
+
+
+# ==============
 #   VSCODE
 # ==============
 echo " [+] Installing VSCODE extensions... "

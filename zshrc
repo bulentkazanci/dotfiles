@@ -1,13 +1,18 @@
 export ZSH="/Users/Brk/.oh-my-zsh"
 
-ZSH_THEME="robbyrussell"
-
 plugins=(
   git
-  zsh-syntax-highlighting
 )
 
 source $ZSH/oh-my-zsh.sh
+
+
+# ==============
+#   Plugins
+# ==============
+source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source ~/.zsh/powerlevel9k/powerlevel9k.zsh-theme
+
 
 # ==============
 #   Git
