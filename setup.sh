@@ -9,15 +9,42 @@ fi
 brew update
 
 # Install all our dependencies with bundle (See Brewfile)
+echo "=====> Installing homebrew bundle"
 brew tap homebrew/bundle
 brew bundle
 
 # ==============
 #   Directories
 # ==============
+echo "====> Creating essential folders"
 if [ ! -d "$HOME/Brkdev" ] 
 then
   mkdir $HOME/Brkdev
+fi
+
+
+# ==============
+#  VIM Plugins
+# ==============
+VIM_PLUG_FILE="${HOME}/.vim/autoload/plug.vim"
+if [ ! -f "${VIM_PLUG_FILE}" ]; then
+  echo " ==> Installing vim plugins"
+  curl -fLo ${VIM_PLUG_FILE} --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
+  mkdir -p "${HOME}/.vim/plugged"
+  pushd "${HOME}/.vim/plugged"
+  git clone https://github.com/preservim/nerdtree.git
+  git clone https://github.com/tpope/vim-surround.git
+  git clone "https://github.com/ervandew/supertab"
+  git clone git://github.com/SirVer/ultisnips.git
+  git clone git://github.com/honza/vim-snippets.git
+  git clone "https://github.com/Raimondi/delimitMate"
+  git clone "https://github.com/tpope/vim-markdown.git"
+  git clone "https://github.com/plasticboy/vim-markdown"
+  git clone "https://github.com/fatih/vim-go"
+  git clone "https://github.com/elzr/vim-json"
+  git clone "https://github.com/ekalinin/Dockerfile.vim"
+  popd
 fi
 
 
@@ -34,9 +61,9 @@ rm install.sh
 #   zsh plugins
 # ==============
 if [ ! -d "${HOME}/.zsh" ]; then
-	echo " ==> Installing zsh plugins"
-	git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "${HOME}/.zsh/zsh-syntax-highlighting"
-	git clone https://github.com/bhilburn/powerlevel9k.git "${HOME}/.zsh/powerlevel9k"
+  echo " ==> Installing zsh plugins"
+  git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "${HOME}/.zsh/zsh-syntax-highlighting"
+  git clone https://github.com/bhilburn/powerlevel9k.git "${HOME}/.zsh/powerlevel9k"
 fi
 
 
