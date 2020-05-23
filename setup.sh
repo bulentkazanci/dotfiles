@@ -35,6 +35,8 @@ if [ ! -f "${VIM_PLUG_FILE}" ]; then
   pushd "${HOME}/.vim/plugged"
   git clone https://github.com/preservim/nerdtree.git
   git clone https://github.com/tpope/vim-surround.git
+  git clone https://github.com/vim-airline/vim-airline.git
+  git clone https://github.com/tomasr/molokai.git
   git clone "https://github.com/ervandew/supertab"
   git clone git://github.com/SirVer/ultisnips.git
   git clone git://github.com/honza/vim-snippets.git
