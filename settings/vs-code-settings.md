@@ -3,8 +3,12 @@
 * Install `Fira Code iScript` from [here](https://github.com/kencrocken/FiraCodeiScript)
 * Set following preferences
 ```
-"editor.fontFamily": "'Fira Code iScript'",
+{
+    "editor.fontFamily": "'Fira Code iScript'",
     "editor.fontLigatures": true,
+    "editor.fontSize": 14,
+    "editor.renderWhitespace": "all",
+    "editor.lineNumbers": "relative",
     "editor.tokenColorCustomizations": {
         "textMateRules": [{
             "scope": [
@@ -33,5 +37,17 @@
             }
           }
         ]
-    }
+    },
+    "[go]": {
+      "editor.formatOnSave": true,
+    },
+    "go.formatTool": "goimports",
+    "go.addTags": {
+      "tags": "json",
+      "options": "json=omitempty",
+      "promptForTags": true,
+      "transform": "snakecase"
+    },
+    "go.useLanguageServer": true
+}
 ```
