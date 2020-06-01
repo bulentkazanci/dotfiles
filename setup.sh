@@ -46,6 +46,7 @@ if [ ! -f "${VIM_PLUG_FILE}" ]; then
   git clone "https://github.com/fatih/vim-go"
   git clone "https://github.com/elzr/vim-json"
   git clone "https://github.com/ekalinin/Dockerfile.vim"
+  git clone "https://github.com/junegunn/fzf.vim"
   popd
 fi
 
@@ -68,6 +69,17 @@ if [ ! -d "${HOME}/.zsh" ]; then
   git clone https://github.com/bhilburn/powerlevel9k.git "${HOME}/.zsh/powerlevel9k"
 fi
 
+# ==============
+#   fzf
+# ==============
+if [ ! -d "${HOME}/.fzf" ]; then
+  echo " ==> Installing fzf"
+  git clone https://github.com/junegunn/fzf "${HOME}/.fzf"
+  pushd "${HOME}/.fzf"
+  git remote set-url origin git@github.com:junegunn/fzf.git 
+  ${HOME}/.fzf/install --bin --64 --no-bash --no-zsh --no-fish
+  popd
+fi
 
 # ==============
 #   VSCODE

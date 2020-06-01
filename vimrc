@@ -12,6 +12,9 @@ Plug 'plasticboy/vim-markdown'
 Plug 'fatih/vim-go'
 Plug 'elzr/vim-json', {'for' : 'json'}
 Plug 'ekalinin/Dockerfile.vim', {'for' : 'Dockerfile'}
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
+Plug 'junegunn/fzf.vim'
+
 
 call plug#end()
 
@@ -31,6 +34,8 @@ set ignorecase               " Search case insensitive...
 set nocursorcolumn           " speed up syntax highlighting
 set nocursorline
 set noerrorbells             " No beeps
+set viminfo='1000            " Fzf uses it for history
+
 
 " configure hybrid line number setting
 :set number relativenumber
