@@ -64,7 +64,6 @@ colorscheme molokai
 " ==============
 
 " =============== Nerdtree
-noremap <Leader>t :NERDTreeToggle<cr>
-noremap <Leader>f :NERDTreeFind<cr>
-let NERDTreeShowHidden=1
-
+noremap <C-n> :NERDTreeToggle<cr>
+noreamp <C-f> :NERDTreeFind<cr>
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
