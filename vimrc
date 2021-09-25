@@ -1,6 +1,7 @@
 call plug#begin('~/.vim/plugged')
 
 Plug 'preservim/nerdtree'
+Plug 'ryanoasis/vim-devicons'
 Plug 'tpope/vim-surround'
 Plug 'vim-airline/vim-airline'
 Plug 'tomasr/molokai'
