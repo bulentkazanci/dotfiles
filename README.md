@@ -5,5 +5,7 @@
 make install
 
 # copy existing dotfiles.
-make setup
+make copy
+
+# Do the manuel jobs in manuel-jobs.md
 ```
