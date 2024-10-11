@@ -1,4 +1,5 @@
 export ZSH="/Users/Brk/.oh-my-zsh"
+export LANG="en_US.UTF-8"
 
 plugins=(
   git
@@ -26,3 +27,8 @@ alias gr="git rebase -i HEAD~2"
 alias gr3="git rebase -i HEAD~3"
 alias gr4="git rebase -i HEAD~4"
 alias gr5="git rebase -i HEAD~5"
+
+# ===================
+#   Vim Mode in Bash
+# ===================
+bindkey -v
