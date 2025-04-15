@@ -1,6 +1,6 @@
 # Manuel Jobs
 
+<!-- TODO BRK: Try to automatize them -->
 - Remap caps lock to esc
-- Activate comment out shortcut on ITerm
-- Switch input language with CMD+L
+- Switch input language with CMD+Shift+L
 - Install Chrome Vimium

@@ -1,21 +1,35 @@
+" I use the same vimrc for both nvim and vim
+if &shell =~# 'fish$'
+    set shell=sh
+endif
+
 call plug#begin('~/.vim/plugged')
 
-Plug 'preservim/nerdtree'
-Plug 'ryanoasis/vim-devicons'
-Plug 'tpope/vim-surround'
-Plug 'vim-airline/vim-airline'
-Plug 'tomasr/molokai'
-Plug 'ervandew/supertab'
 Plug 'SirVer/ultisnips'
-Plug 'honza/vim-snippets'
-Plug 'Raimondi/delimitMate'
-Plug 'plasticboy/vim-markdown'
-Plug 'fatih/vim-go'
-Plug 'elzr/vim-json', {'for' : 'json'}
+Plug 'arthurxavierx/vim-caser'
 Plug 'ekalinin/Dockerfile.vim', {'for' : 'Dockerfile'}
+Plug 'elzr/vim-json', {'for' : 'json'}
+Plug 'ervandew/supertab'
+Plug 'gruvbox-community/gruvbox'
+Plug 'edkolev/tmuxline.vim'
+Plug 'vim-airline/vim-airline'
+Plug 'fatih/vim-go'
+Plug 'fatih/vim-nginx' , {'for' : 'nginx'}
+Plug 'godlygeek/tabular'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
-
+Plug 'mileszs/ack.vim'
+Plug 'plasticboy/vim-markdown'
+Plug 'roxma/vim-tmux-clipboard'
+Plug 'scrooloose/nerdtree'
+Plug 't9md/vim-choosewin'
+Plug 'tmux-plugins/vim-tmux', {'for': 'tmux'}
+Plug 'tmux-plugins/vim-tmux-focus-events'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-surround'
+Plug 'tyru/open-browser.vim'
+Plug 'dag/vim-fish'
 
 call plug#end()
 
@@ -51,20 +65,13 @@ set viminfo='1000            " Fzf uses it for history
 " increase max memory to show syntax highlighting for large files
 set maxmempattern=20000
 
-" color
-syntax enable
-set t_Co=256
-set background=dark
-let g:molokai_original = 1
-let g:rehash256 = 1
-colorscheme molokai
-
 
 " ==============
-"   Plugins
+"   Mappings
 " ==============
 
-" =============== Nerdtree
-noremap <C-n> :NERDTreeToggle<cr>
-noreamp <C-f> :NERDTreeFind<cr>
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+" Better split switching
+map <C-j> <C-W>j
+map <C-k> <C-W>k
+map <C-h> <C-W>h
+map <C-l> <C-W>l

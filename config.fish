@@ -1,19 +1,10 @@
-export ZSH="/Users/Brk/.oh-my-zsh"
-export LANG="en_US.UTF-8"
+set -gxp PATH $HOME/go/bin /usr/local/opt/python@3.11/libexec/bin /usr/local/sbin /opt/homebrew/bin /opt/homebrew/opt/node@20/bin
+set -gx GOBIN $HOME/go/bin
+set -gx EDITOR nvim
+set -gx FZF_CTRL_T_COMMAND nvim
 
-plugins=(
-  git
-)
-
-source $ZSH/oh-my-zsh.sh
-
-
-# ==============
-#   Plugins
-# ==============
-source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-source ~/.zsh/powerlevel9k/powerlevel9k.zsh-theme
-
+# Disable fish greeting
+set fish_greeting ""
 
 # ==============
 #   Git
@@ -29,6 +20,6 @@ alias gr4="git rebase -i HEAD~4"
 alias gr5="git rebase -i HEAD~5"
 
 # ===================
-#   Vim Mode in Bash
+#   Vim Mode in Fish
 # ===================
-bindkey -v
+fish_vi_key_bindings

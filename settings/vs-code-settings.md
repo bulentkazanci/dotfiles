@@ -1,4 +1,5 @@
 # Font Setup
+<!-- TODO BRK: delete this file but apply ligatures to vim -->
 
 * Install `Fira Code iScript` from [here](https://github.com/kencrocken/FiraCodeiScript)
 * Set following preferences
