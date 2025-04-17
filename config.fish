@@ -3,6 +3,11 @@ set -gx GOBIN $HOME/go/bin
 set -gx EDITOR nvim
 set -gx FZF_CTRL_T_COMMAND nvim
 
+# Load local fish config
+if test -f ~/.config/fish/local.fish
+  source ~/.config/fish/local.fish
+end
+
 # Disable fish greeting
 set fish_greeting ""
 
