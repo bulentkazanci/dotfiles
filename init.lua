@@ -699,6 +699,7 @@ vim.api.nvim_create_autocmd("BufWinEnter", {
 vim.keymap.set('n', '<leader>gb', '<CMD>lua require("git.blame").blame()<CR>')
 vim.keymap.set('n', '<leader>go', "<CMD>lua require('git.browse').open(false)<CR>")
 vim.keymap.set('x', '<leader>go', ":<C-u> lua require('git.browse').open(true)<CR>")
+vim.keymap.set('n', '<leader>gid', '<CMD>lua require("git.diff").open()<CR>')
 
 -- old habits 
 vim.api.nvim_create_user_command("GBrowse", 'lua require("git.browse").open(true)<CR>', {
