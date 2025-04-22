@@ -40,6 +40,47 @@ require("lazy").setup({
     end,
   },
 
+  -- Greeting Screen
+  {
+  "goolord/alpha-nvim",
+  dependencies = {
+    "nvim-tree/nvim-web-devicons",
+  },
+
+  config = function()
+    local alpha = require("alpha")
+    local dashboard = require("alpha.themes.dashboard")
+
+    dashboard.section.header.val = {
+      [[                                                                       ]],
+      [[                                                                       ]],
+      [[                                                                       ]],
+      [[                                                                       ]],
+      [[                                                                     ]],
+      [[       ████ ██████           █████      ██                     ]],
+      [[      ███████████             █████                             ]],
+      [[      █████████ ███████████████████ ███   ███████████   ]],
+      [[     █████████  ███    █████████████ █████ ██████████████   ]],
+      [[    █████████ ██████████ █████████ █████ █████ ████ █████   ]],
+      [[  ███████████ ███    ███ █████████ █████ █████ ████ █████  ]],
+      [[ ██████  █████████████████████ ████ █████ █████ ████ ██████ ]],
+      [[                                                                       ]],
+      [[                                                                       ]],
+      [[                                                                       ]],
+    }
+
+      dashboard.section.buttons.val = {
+        dashboard.button( "e", "  > New file" , ":ene <BAR> startinsert <CR>"),
+        dashboard.button( "f", "  > Find file", ":cd $HOME/Brkdev | Telescope find_files<CR>"),
+        dashboard.button( "r", "  > Recent"   , ":Telescope oldfiles<CR>"),
+        dashboard.button( "s", "  > Settings" , ":e $MYVIMRC | :cd %:p:h | split . | wincmd k | pwd<CR>"),
+        dashboard.button( "q", "  > Quit", ":qa<CR>"),
+      }
+
+      alpha.setup(dashboard.opts)
+    end,
+  },
+
   -- Status Line
   { 
     "nvim-lualine/lualine.nvim",
@@ -88,26 +129,26 @@ require("lazy").setup({
     config = function()
       require('nvim-treesitter.configs').setup({
         ensure_installed = {
-            'bash',
-            'dockerfile',
-            'fish',
-            'go',
-            'gomod',
-            'helm',
-            'html',
-            'java',
-            'javadoc',
-            'javascript',
-            'json',
-            'markdown',
-            'markdown_inline',
-            'nginx',
-            'python',
-            'sql',
-            'terraform',
-            'vim',
-            'vimdoc',
-            'yaml',
+          'bash',
+          'dockerfile',
+          'fish',
+          'go',
+          'gomod',
+          'helm',
+          'html',
+          'java',
+          'javadoc',
+          'javascript',
+          'json',
+          'markdown',
+          'markdown_inline',
+          'nginx',
+          'python',
+          'sql',
+          'terraform',
+          'vim',
+          'vimdoc',
+          'yaml',
         },
         indent = { enable = true },
         incremental_selection = {
@@ -230,7 +271,7 @@ require("lazy").setup({
           vim.keymap.set('n', '<leader>j', '<C-w>j', { desc = "Move down pane" })
           vim.keymap.set('n', '<leader>k', '<C-w>k', { desc = "Move up pane" })
           vim.keymap.set('n', '<leader>l', '<C-w>l', { desc = "Move right pane" })
-       end
+        end
       })
     end,
   },
@@ -463,26 +504,26 @@ require("lazy").setup({
       luasnip.config.setup {}
 
       local modified_priority = {
-          [types.lsp.CompletionItemKind.Variable] = types.lsp.CompletionItemKind.Method,
-          [types.lsp.CompletionItemKind.Snippet] = 0, -- top
-          [types.lsp.CompletionItemKind.Keyword] = 0, -- top
-          [types.lsp.CompletionItemKind.Text] = 100, -- bottom
+        [types.lsp.CompletionItemKind.Variable] = types.lsp.CompletionItemKind.Method,
+        [types.lsp.CompletionItemKind.Snippet] = 0, -- top
+        [types.lsp.CompletionItemKind.Keyword] = 0, -- top
+        [types.lsp.CompletionItemKind.Text] = 100, -- bottom
       }
 
       local function modified_kind(kind)
-          return modified_priority[kind] or kind
+        return modified_priority[kind] or kind
       end
 
 
       require('cmp').setup({
         preselect = false,
         completion = {
-            completeopt = "menu,menuone,preview,noselect",
+          completeopt = "menu,menuone,preview,noselect",
         },
         snippet = {
-            expand = function(args)
-              luasnip.lsp_expand(args.body)
-            end,
+          expand = function(args)
+            luasnip.lsp_expand(args.body)
+          end,
         },
         formatting = {
           format = lspkind.cmp_format {
@@ -496,38 +537,38 @@ require("lazy").setup({
         },
 
         sorting = {
-            priority_weight = 1.0,
-            comparators = {
-                compare.offset,
-                compare.exact,
-                compare.score,
-                compare.locality,
-                function(entry1, entry2) -- sort by length ignoring "=~"
-                    local len1 = string.len(string.gsub(entry1.completion_item.label, "[=~()_]", ""))
-                    local len2 = string.len(string.gsub(entry2.completion_item.label, "[=~()_]", ""))
-                    if len1 ~= len2 then
-                        return len1 - len2 < 0
-                    end
-                end,
-                compare.recently_used,
-                function(entry1, entry2) -- sort by compare kind (Variable, Function etc)
-                    local kind1 = modified_kind(entry1:get_kind())
-                    local kind2 = modified_kind(entry2:get_kind())
-                    if kind1 ~= kind2 then
-                        return kind1 - kind2 < 0
-                    end
-                end,
-                require("cmp-under-comparator").under,
-                compare.kind,
-            },
+          priority_weight = 1.0,
+          comparators = {
+            compare.offset,
+            compare.exact,
+            compare.score,
+            compare.locality,
+            function(entry1, entry2) -- sort by length ignoring "=~"
+              local len1 = string.len(string.gsub(entry1.completion_item.label, "[=~()_]", ""))
+              local len2 = string.len(string.gsub(entry2.completion_item.label, "[=~()_]", ""))
+              if len1 ~= len2 then
+                return len1 - len2 < 0
+              end
+            end,
+            compare.recently_used,
+            function(entry1, entry2) -- sort by compare kind (Variable, Function etc)
+              local kind1 = modified_kind(entry1:get_kind())
+              local kind2 = modified_kind(entry2:get_kind())
+              if kind1 ~= kind2 then
+                return kind1 - kind2 < 0
+              end
+            end,
+            require("cmp-under-comparator").under,
+            compare.kind,
+          },
         },
 
         matching = {
-           disallow_fuzzy_matching = true,
-           disallow_fullfuzzy_matching = true,
-           disallow_partial_fuzzy_matching = true,
-           disallow_partial_matching = false,
-           disallow_prefix_unmatching = true,
+          disallow_fuzzy_matching = true,
+          disallow_fullfuzzy_matching = true,
+          disallow_partial_fuzzy_matching = true,
+          disallow_partial_matching = false,
+          disallow_prefix_unmatching = true,
         },
         mapping = cmp.mapping.preset.insert {
           ['<C-n>'] = cmp.mapping.select_next_item(),
@@ -537,21 +578,21 @@ require("lazy").setup({
           ['<CR>'] = cmp.mapping.confirm { select = true },
           ["<Tab>"] = cmp.mapping(function(fallback)
             if cmp.visible() then
-                cmp.select_next_item()
+              cmp.select_next_item()
             elseif luasnip.expand_or_jumpable() then
-                luasnip.expand_or_jump()
+              luasnip.expand_or_jump()
             else
-                fallback()
+              fallback()
             end
           end, { 'i', 's' }),
           ["<S-Tab>"] = cmp.mapping(function(fallback)
-             if cmp.visible() then
-                 cmp.select_prev_item()
-             elseif luasnip.jumpable(-1) then
-                 luasnip.jump(-1)
-             else
-                 fallback()
-             end
+            if cmp.visible() then
+              cmp.select_prev_item()
+            elseif luasnip.jumpable(-1) then
+              luasnip.jump(-1)
+            else
+              fallback()
+            end
           end, { "i", "s" }),
 
         },
@@ -688,11 +729,11 @@ vim.keymap.set("n", "gx", '<Cmd>call jobstart(["open", expand("<cfile>")], {"det
 
 -- Open help window in a vertical split to the right.
 vim.api.nvim_create_autocmd("BufWinEnter", {
-    group = vim.api.nvim_create_augroup("help_window_right", {}),
-    pattern = { "*.txt" },
-    callback = function()
-        if vim.o.filetype == 'help' then vim.cmd.wincmd("L") end
-    end
+  group = vim.api.nvim_create_augroup("help_window_right", {}),
+  pattern = { "*.txt" },
+  callback = function()
+    if vim.o.filetype == 'help' then vim.cmd.wincmd("L") end
+  end
 })
 
 -- git.nvim
