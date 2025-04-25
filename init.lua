@@ -42,32 +42,32 @@ require("lazy").setup({
 
   -- Greeting Screen
   {
-  "goolord/alpha-nvim",
-  dependencies = {
-    "nvim-tree/nvim-web-devicons",
-  },
+    "goolord/alpha-nvim",
+    dependencies = {
+      "nvim-tree/nvim-web-devicons",
+    },
 
-  config = function()
-    local alpha = require("alpha")
-    local dashboard = require("alpha.themes.dashboard")
+    config = function()
+      local alpha = require("alpha")
+      local dashboard = require("alpha.themes.dashboard")
 
-    dashboard.section.header.val = {
-      [[                                                                       ]],
-      [[                                                                       ]],
-      [[                                                                       ]],
-      [[                                                                       ]],
-      [[                                                                     ]],
-      [[       ████ ██████           █████      ██                     ]],
-      [[      ███████████             █████                             ]],
-      [[      █████████ ███████████████████ ███   ███████████   ]],
-      [[     █████████  ███    █████████████ █████ ██████████████   ]],
-      [[    █████████ ██████████ █████████ █████ █████ ████ █████   ]],
-      [[  ███████████ ███    ███ █████████ █████ █████ ████ █████  ]],
-      [[ ██████  █████████████████████ ████ █████ █████ ████ ██████ ]],
-      [[                                                                       ]],
-      [[                                                                       ]],
-      [[                                                                       ]],
-    }
+      dashboard.section.header.val = {
+        [[                                                                       ]],
+        [[                                                                       ]],
+        [[                                                                       ]],
+        [[                                                                       ]],
+        [[                                                                     ]],
+        [[       ████ ██████           █████      ██                     ]],
+        [[      ███████████             █████                             ]],
+        [[      █████████ ███████████████████ ███   ███████████   ]],
+        [[     █████████  ███    █████████████ █████ ██████████████   ]],
+        [[    █████████ ██████████ █████████ █████ █████ ████ █████   ]],
+        [[  ███████████ ███    ███ █████████ █████ █████ ████ █████  ]],
+        [[ ██████  █████████████████████ ████ █████ █████ ████ ██████ ]],
+        [[                                                                       ]],
+        [[                                                                       ]],
+        [[                                                                       ]],
+      }
 
       dashboard.section.buttons.val = {
         dashboard.button( "e", "  > New file" , ":ene <BAR> startinsert <CR>"),
@@ -618,6 +618,38 @@ require("lazy").setup({
     end,
   },
 
+  -- DAP
+  {
+    "mfussenegger/nvim-dap",
+    dependencies = {
+      "rcarriga/nvim-dap-ui",
+      "leoluz/nvim-dap-go",
+      "nvim-neotest/nvim-nio"
+    },
+    config = function()
+      local dap = require("dap")
+      local dapui = require("dapui")
+
+      dapui.setup()
+
+      dap.listeners.after.event_initialized["dapui_config"] = function()
+        dapui.open()
+      end
+      dap.listeners.before.event_terminated["dapui_config"] = function()
+        dapui.close()
+      end
+      dap.listeners.before.event_exited["dapui_config"] = function()
+        dapui.close()
+      end
+    end,
+  },
+  {
+    "leoluz/nvim-dap-go",
+    config = function()
+      require("dap-go").setup()
+    end,
+    ft = "go",
+  },
 
 })
 
@@ -858,3 +890,8 @@ vim.api.nvim_create_autocmd('LspAttach', {
     vim.keymap.set({'n', 'v'}, '<leader>ca', vim.lsp.buf.code_action, opts)
   end,
 })
+
+-- DAP
+vim.keymap.set("n", "<leader>dt","<CMD>lua require('dap').toggle_breakpoint()<CR>")
+vim.keymap.set("n", "<leader>dc", "<CMD>lua require('dap').continue()<CR>")
+vim.keymap.set("n", "<leader>dr", "<CMD>lua require('dap').repl.open()<CR>")
