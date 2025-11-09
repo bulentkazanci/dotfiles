@@ -13,6 +13,9 @@ copy:
 	[ -f ~/.gitconfig ] || ln -s $(PWD)/gitconfig ~/.gitconfig
 	[ -f ~/.config/ghostty/config ] || ln -s $(PWD)/ghostty.config ~/.config/ghostty/config
 
+	[ -f ~/.tmux.conf ] || ln -s $(PWD)/tmux.conf ~/.tmux.conf
+
+
 	# don't show last login message
 	touch ~/.hushlogin
 
@@ -24,8 +27,6 @@ clean:
 	rm -f ~/.gitconfig
 	rm -f ~/.agignore
 	rm -f ~/.config/ghostty/config
-	rm -f ~/.config/zed/settings.json
-	rm -f ~/.config/zed/keymap.json
-	rm -f ~/.config/zed/tasks.json
+	rm -f ~/.tmux
 
 .PHONY: all clean sync 
