@@ -288,33 +288,6 @@ require("lazy").setup({
     end,
   },
 
-  -- Markdown
-  {
-    "iamcco/markdown-preview.nvim",
-    dependencies = {
-      "zhaozg/vim-diagram",
-      "aklt/plantuml-syntax",
-    },
-    build = function()
-      vim.fn["mkdp#util#install"]()
-    end,
-    ft = "markdown",
-    cmd = { "MarkdownPreview" },
-  },
-
-  -- Commenting out lines
-  {
-    "numToStr/Comment.nvim",
-    config = function()
-      require('Comment').setup({
-        opleader = {
-          ---Block-comment keymap
-          block = '<Nop>',
-        },
-      }) 
-    end
-  },
-
   { 
     "AndrewRadev/splitjoin.vim"
   },
@@ -322,73 +295,135 @@ require("lazy").setup({
   {
     "windwp/nvim-autopairs",
     config = function() 
-      require("nvim-autopairs").setup {
+      local npairs = require("nvim-autopairs")
+      npairs.setup {
         check_ts = true,
       }
+
+      -- Remove backtick pairing
+      local Rule = require('nvim-autopairs.rule')
+      npairs.remove_rule('`')
     end
   },
 
-
-  { -- Fuzzy Finder (files, lsp, etc)
-    'nvim-telescope/telescope.nvim',
-    event = 'VimEnter',
-    branch = '0.1.x',
+  -- Markdown etc. preview
+  {
+    'brianhuster/live-preview.nvim',
     dependencies = {
-      'nvim-lua/plenary.nvim',
-      { -- If encountering errors, see telescope-fzf-native README for installation instructions
-        'nvim-telescope/telescope-fzf-native.nvim',
-
-        -- `build` is used to run some command when the plugin is installed/updated.
-        -- This is only run then, not every time Neovim starts up.
-        build = 'make',
-
-        -- `cond` is a condition used to determine whether this plugin should be
-        -- installed and loaded.
-        cond = function()
-          return vim.fn.executable 'make' == 1
-        end,
-      },
-      { 'nvim-telescope/telescope-ui-select.nvim' },
-
-      -- Useful for getting pretty icons, but requires a Nerd Font.
-      { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
+      'ibhagwan/fzf-lua',
+      'folke/snacks.nvim',
     },
+  },
 
-    config = function()
-      require('telescope').setup {
-        defaults = {
-          layout_strategy = 'center',
-          sorting_strategy = "ascending",
-          layout_config = {
-            prompt_position = "top"  -- search bar at the top
+  -- { -- Fuzzy Finder (files, lsp, etc)
+  {
+    "ibhagwan/fzf-lua",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    opts = {},
+    config = function() 
+      require("fzf-lua").register_ui_select()
+      require('fzf-lua').setup {
+        oldfiles = {
+          -- include current sessions in old_files mode
+          include_current_session = true,
+        },
+        winopts = {
+          -- split = "belowright 10new",
+          backdrop = 100,
+          border = "rounded",
+
+          preview = {
+            default = "bat",
+            hidden = false,
+            border = "rounded",
+            layout = "vertical",
+            vertical = "down:60%",
+            title = true,
+            title_pos = "center",
           },
         },
-        extensions = {
-          ['ui-select'] = {
-            require('telescope.themes').get_dropdown(),
+        git = {
+          files = {
+            cwd_header = false,
+            prompt        = '❯ ',
+            cmd           = 'git ls-files --exclude-standard',
+            multiprocess  = true,  -- run command in a separate process
+            git_icons     = true, -- show git icons?
+            file_icons    = true, -- show file icons (true|"devicons"|"mini")?
+            color_icons   = true, -- colorize file|git icons
           },
         },
-        picker = {
-          find_files = {
-            theme = "dropdown",
-          }
+        files = {
+          git_files = false,
+          cwd_header = false,
+          cwd_prompt = true,
+          file_icons = true,
         }
       }
 
-      -- Enable Telescope extensions if they are installed
-      pcall(require('telescope').load_extension, 'fzf')
-      pcall(require('telescope').load_extension, 'ui-select')
-
-      -- See `:help telescope.builtin`
-      local builtin = require 'telescope.builtin'
-      vim.keymap.set('n', '<C-p>', builtin.git_files, {})
-      vim.keymap.set('n', '<C-b>', builtin.find_files, {})
-      vim.keymap.set('n', '<C-g>', builtin.lsp_document_symbols, {})
-      vim.keymap.set('n', '<leader>td', builtin.diagnostics, {})
-      vim.keymap.set('n', '<leader>gs', builtin.grep_string, {})
-      vim.keymap.set('n', '<leader>gg', builtin.live_grep, {})
-    end,
+    end
   },
+
+  -- { -- Fuzzy Finder (files, lsp, etc)
+  --   'nvim-telescope/telescope.nvim',
+  --   event = 'VimEnter',
+  --   branch = '0.1.x',
+  --   dependencies = {
+  --     'nvim-lua/plenary.nvim',
+  --     { -- If encountering errors, see telescope-fzf-native README for installation instructions
+  --       'nvim-telescope/telescope-fzf-native.nvim',
+  --
+  --       -- `build` is used to run some command when the plugin is installed/updated.
+  --       -- This is only run then, not every time Neovim starts up.
+  --       build = 'make',
+  --
+  --       -- `cond` is a condition used to determine whether this plugin should be
+  --       -- installed and loaded.
+  --       cond = function()
+  --         return vim.fn.executable 'make' == 1
+  --       end,
+  --     },
+  --     { 'nvim-telescope/telescope-ui-select.nvim' },
+  --
+  --     -- Useful for getting pretty icons, but requires a Nerd Font.
+  --     { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
+  --   },
+  --
+  --   config = function()
+  --     require('telescope').setup {
+  --       defaults = {
+  --         layout_strategy = 'center',
+  --         sorting_strategy = "ascending",
+  --         layout_config = {
+  --           prompt_position = "top"  -- search bar at the top
+  --         },
+  --       },
+  --       extensions = {
+  --         ['ui-select'] = {
+  --           require('telescope.themes').get_dropdown(),
+  --         },
+  --       },
+  --       picker = {
+  --         find_files = {
+  --           theme = "dropdown",
+  --         }
+  --       }
+  --     }
+  --
+  --     -- Enable Telescope extensions if they are installed
+  --     pcall(require('telescope').load_extension, 'fzf')
+  --     pcall(require('telescope').load_extension, 'ui-select')
+  --
+  --     -- See `:help telescope.builtin`
+  --     local builtin = require 'telescope.builtin'
+  --     vim.keymap.set('n', '<C-p>', builtin.git_files, {})
+  --     vim.keymap.set('n', '<C-b>', builtin.find_files, {})
+  --     vim.keymap.set('n', '<C-g>', builtin.lsp_document_symbols, {})
+  --     vim.keymap.set('n', '<leader>td', builtin.diagnostics, {})
+  --     vim.keymap.set('n', '<leader>gs', builtin.grep_string, {})
+  --     vim.keymap.set('n', '<leader>gg', builtin.live_grep, {})
+  --   end,
+  -- },
 
   -- LSP Plugins
   {
@@ -403,7 +438,9 @@ require("lazy").setup({
       },
     },
   },
+
   { 'Bilal2453/luvit-meta', lazy = true },
+
   {
     -- Main LSP Configuration
     'neovim/nvim-lspconfig',
@@ -417,12 +454,11 @@ require("lazy").setup({
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
       { 'j-hui/fidget.nvim', opts = {} },
 
-      -- Allows extra capabilities provided by nvim-cmp
-      'hrsh7th/cmp-nvim-lsp',
+      'saghen/blink.cmp',
+
     },
     config = function()
-      local capabilities = vim.lsp.protocol.make_client_capabilities()
-      capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
+      local capabilities = require('blink.cmp').get_lsp_capabilities()
 
       local servers = {
         gopls = {
@@ -437,7 +473,6 @@ require("lazy").setup({
             },
           },
         },
-        ts_ls = {},
       }
 
       -- Ensure the servers and tools above are installed
@@ -472,151 +507,48 @@ require("lazy").setup({
     end,
   },
 
-  {
-    "L3MON4D3/LuaSnip",
-    dependencies = { "rafamadriz/friendly-snippets" },
-    config = function() 
-      require("luasnip.loaders.from_vscode").lazy_load()
-    end
-  },
+  { "rafamadriz/friendly-snippets" },
 
-  -- Autocompletion
+  -- autocompletion
   {
-    "hrsh7th/nvim-cmp",
-    dependencies = {
-      "hrsh7th/cmp-nvim-lsp",
-      "hrsh7th/cmp-buffer",
-      "L3MON4D3/LuaSnip",
-      "saadparwaiz1/cmp_luasnip",
-      "onsails/lspkind-nvim",
-      "lukas-reineke/cmp-under-comparator",
+    'saghen/blink.cmp',
+    dependencies = { 'rafamadriz/friendly-snippets' },
+    version = '1.*',
+    opts = {
+      keymap = { 
+        preset = 'enter',
+        ["<Tab>"] = { "select_next", "snippet_forward", "fallback" },
+        ["<S-Tab>"] = { "select_next", "snippet_forward", "fallback" },
+      },
+      appearance = {
+        nerd_font_variant = 'mono'
+      },
+      completion = { 
+        documentation = {
+          auto_show = true,
+          auto_show_delay_ms = 100,
+        },
+        menu = {
+          border = 'rounded',
+          draw = {
+            treesitter = { 'lsp' },
+          },
+        },
+        list = {
+          selection = {
+            preselect = false,
+            auto_insert = true,
+          },
+        },
+      },
+      sources = {
+        default = { 'lsp', 'path', 'snippets'},
+      },
+      fuzzy = { implementation = "prefer_rust_with_warning" }
     },
-    config = function()
-      local cmp = require("cmp")
-      local luasnip = require("luasnip")
-      local lspkind = require("lspkind")
-      local types = require("cmp.types")
-      local compare = require("cmp.config.compare")
-      local cmp_autopairs = require("nvim-autopairs.completion.cmp")
-
-      cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
-
-      luasnip.config.setup {}
-
-      local modified_priority = {
-        [types.lsp.CompletionItemKind.Variable] = types.lsp.CompletionItemKind.Method,
-        [types.lsp.CompletionItemKind.Snippet] = 0, -- top
-        [types.lsp.CompletionItemKind.Keyword] = 0, -- top
-        [types.lsp.CompletionItemKind.Text] = 100, -- bottom
-      }
-
-      local function modified_kind(kind)
-        return modified_priority[kind] or kind
-      end
-
-
-      require('cmp').setup({
-        preselect = false,
-        completion = {
-          completeopt = "menu,menuone,preview,noselect",
-        },
-        snippet = {
-          expand = function(args)
-            luasnip.lsp_expand(args.body)
-          end,
-        },
-        formatting = {
-          format = lspkind.cmp_format {
-            with_text = true,
-            menu = {
-              buffer = "[Buffer]",
-              nvim_lsp = "[LSP]",
-              nvim_lua = "[Lua]",
-            },
-          },
-        },
-
-        sorting = {
-          priority_weight = 1.0,
-          comparators = {
-            compare.offset,
-            compare.exact,
-            compare.score,
-            compare.locality,
-            function(entry1, entry2) -- sort by length ignoring "=~"
-              local len1 = string.len(string.gsub(entry1.completion_item.label, "[=~()_]", ""))
-              local len2 = string.len(string.gsub(entry2.completion_item.label, "[=~()_]", ""))
-              if len1 ~= len2 then
-                return len1 - len2 < 0
-              end
-            end,
-            compare.recently_used,
-            function(entry1, entry2) -- sort by compare kind (Variable, Function etc)
-              local kind1 = modified_kind(entry1:get_kind())
-              local kind2 = modified_kind(entry2:get_kind())
-              if kind1 ~= kind2 then
-                return kind1 - kind2 < 0
-              end
-            end,
-            require("cmp-under-comparator").under,
-            compare.kind,
-          },
-        },
-
-        matching = {
-          disallow_fuzzy_matching = true,
-          disallow_fullfuzzy_matching = true,
-          disallow_partial_fuzzy_matching = true,
-          disallow_partial_matching = false,
-          disallow_prefix_unmatching = true,
-        },
-        mapping = cmp.mapping.preset.insert {
-          ['<C-n>'] = cmp.mapping.select_next_item(),
-          ['<C-p>'] = cmp.mapping.select_prev_item(),
-          ['<C-d>'] = cmp.mapping.scroll_docs(-4),
-          ['<C-f>'] = cmp.mapping.scroll_docs(4),
-          ['<CR>'] = cmp.mapping.confirm { select = true },
-          ["<Tab>"] = cmp.mapping(function(fallback)
-            if cmp.visible() then
-              cmp.select_next_item()
-            elseif luasnip.expand_or_jumpable() then
-              luasnip.expand_or_jump()
-            else
-              fallback()
-            end
-          end, { 'i', 's' }),
-          ["<S-Tab>"] = cmp.mapping(function(fallback)
-            if cmp.visible() then
-              cmp.select_prev_item()
-            elseif luasnip.jumpable(-1) then
-              luasnip.jump(-1)
-            else
-              fallback()
-            end
-          end, { "i", "s" }),
-
-        },
-        window = { documentation = cmp.config.window.bordered(), completion = cmp.config.window.bordered() },
-        view = {
-          entries = {
-            name = "custom",
-            selection_order = "near_cursor",
-          },
-        },
-        confirm_opts = {
-          behavior = cmp.ConfirmBehavior.Insert,
-        },
-        sources = {
-          { name = 'nvim_lsp' },
-          { name = "luasnip", keyword_length = 2},
-          { name = "buffer", keyword_length = 5},
-        },
-        performance = {
-          max_view_entries = 20,
-        },
-      })
-    end,
+    opts_extend = { "sources.default" }
   },
+
 
   -- DAP
   {
@@ -867,6 +799,12 @@ vim.api.nvim_create_autocmd('BufWritePre', {
     vim.lsp.buf.format()
   end
 })
+
+-- File finder
+vim.keymap.set("n", "<C-p>", require("fzf-lua").git_files, {})
+vim.keymap.set("n", "<C-b>", require("fzf-lua").files, {})
+vim.keymap.set("n", "<leader>gg", function() require("fzf-lua").live_grep() end, {})
+vim.keymap.set("n", "<leader>gs", function() require("fzf-lua").grep_cword() end, {})
 
 -- Use LspAttach autocommand to only map the following keys
 -- after the language server attaches to the current buffer
