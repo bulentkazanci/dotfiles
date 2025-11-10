@@ -1,5 +1,6 @@
 # dotfiles
 
+### Commands
 ```
 // Copy dot files
 > make copy
@@ -15,9 +16,12 @@
 
 ```
 
-
-
-
 ```
 # Do the manuel jobs in manuel-jobs.md
+```
+
+### TODO
+```
+- [] Automatize caps lock to esc remap
+- [] Automatize input language switch with CMD+Shift+L
 ```
