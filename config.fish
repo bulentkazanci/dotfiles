@@ -11,6 +11,13 @@ end
 # Disable fish greeting
 set fish_greeting ""
 
+
+# ==============
+#   General
+# ==============
+alias e="exit"
+alias cls="clear"
+
 # ==============
 #   Git
 # ==============
@@ -26,6 +33,14 @@ alias gr="git rebase -i HEAD~2"
 alias gr3="git rebase -i HEAD~3"
 alias gr4="git rebase -i HEAD~4"
 alias gr5="git rebase -i HEAD~5"
+
+# ==============
+#   Tmux
+# ==============
+alias tmn="tmux new -s"
+alias tma="tmux attach -t"
+alias tmls="tmux ls"
+alias tmk="tmux kill-session -t"
 
 # ===================
 #   Vim Mode in Fish
