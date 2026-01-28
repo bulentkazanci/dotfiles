@@ -122,12 +122,9 @@ require("lazy").setup({
   -- Tree Sitter
   { 
     'nvim-treesitter/nvim-treesitter',
-    dependencies = {
-      'nvim-treesitter/nvim-treesitter-textobjects',
-    },
     build = ":TSUpdate",
     config = function()
-      require('nvim-treesitter.configs').setup({
+      require('nvim-treesitter.config').setup({
         ensure_installed = {
           'bash',
           'dockerfile',
@@ -225,6 +222,11 @@ require("lazy").setup({
         },
       })
     end,
+  },
+  {
+    "nvim-treesitter/nvim-treesitter-textobjects",
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
+    lazy = true, -- don't load until treesitter is ready
   },
 
   -- Search selection via *
@@ -631,14 +633,31 @@ vim.g.mapleader = ','
 vim.keymap.set('n', '<Leader>w', ':write!<CR>')
 vim.keymap.set('n', '<Leader>q', ':q!<CR>', { silent = true })
 
+-- Center cursor after navigation
+vim.keymap.set('n', '{', '{zz')
+vim.keymap.set('n', '}', '}zz')
+vim.keymap.set("n", "j", function()
+  if vim.v.count > 1 then
+    vim.cmd.normal({ vim.v.count .. "gj", bang = true })
+    vim.cmd.normal({ "zz", bang = true })
+  else
+    vim.cmd.normal({ "j", bang = true })
+  end
+end, { noremap = true })
+vim.keymap.set("n", "k", function()
+  if vim.v.count > 1 then
+    vim.cmd.normal({ vim.v.count .. "gk", bang = true })
+    vim.cmd.normal({ "zz", bang = true })
+  else
+    vim.cmd.normal({ "k", bang = true })
+  end
+end, { noremap = true })
+
+
 -- Some useful quickfix shortcuts for quickfix
 vim.keymap.set('n', '<C-n>', '<cmd>cnext<CR>zz')
 vim.keymap.set('n', '<C-m>', '<cmd>cprev<CR>zz')
 vim.keymap.set('n', '<leader>a', '<cmd>cclose<CR>')
-
--- Exit on jj and jk
-vim.keymap.set('n', 'j', 'gj')
-vim.keymap.set('n', 'k', 'gk')
 
 -- Exit on jj and jk
 vim.keymap.set('i', 'jj', '<ESC>')

@@ -1,9 +1,12 @@
 [user]
   name = Buelent Rahim Kazanci
   email = kazancibulent@gmail.com
+	signingkey = 9CD8638CB9435571
 [color]
   ui = auto
 [github]
   user = bulentkazanci
 [push]
 	default = tracking
+[commit]
+	gpgsign = true
