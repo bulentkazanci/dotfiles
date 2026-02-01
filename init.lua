@@ -120,11 +120,15 @@ require("lazy").setup({
   },
 
   -- Tree Sitter
-  { 
+    { 
     'nvim-treesitter/nvim-treesitter',
+    dependencies = {
+      'nvim-treesitter/nvim-treesitter-textobjects',
+    },
+    branch = "master",
     build = ":TSUpdate",
     config = function()
-      require('nvim-treesitter.config').setup({
+      require('nvim-treesitter.configs').setup({
         ensure_installed = {
           'bash',
           'dockerfile',
@@ -222,11 +226,6 @@ require("lazy").setup({
         },
       })
     end,
-  },
-  {
-    "nvim-treesitter/nvim-treesitter-textobjects",
-    dependencies = { "nvim-treesitter/nvim-treesitter" },
-    lazy = true, -- don't load until treesitter is ready
   },
 
   -- Search selection via *
@@ -819,6 +818,15 @@ vim.api.nvim_create_autocmd('BufWritePre', {
   end
 })
 
+-- File Tree
+vim.api.nvim_create_autocmd({ "TabNew" }, {
+  callback = function()
+    require("nvim-tree.api").tree.open()
+    vim.cmd("wincmd p")  -- move focus back to previous window
+  end,
+})
+
+
 -- File finder
 vim.keymap.set("n", "<C-p>", require("fzf-lua").git_files, {})
 vim.keymap.set("n", "<C-b>", require("fzf-lua").files, {})
@@ -834,14 +842,14 @@ vim.api.nvim_create_autocmd('LspAttach', {
     -- See `:help vim.lsp.*` for documentation on any of the below functions
     local opts = { buffer = ev.buf }
 
-    vim.keymap.set('n', 'gd', "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
+    vim.keymap.set('n', 'gd', function () require('fzf-lua').lsp_definitions() end, opts)
     vim.keymap.set('n', '<leader>v', "<cmd>vsplit | lua vim.lsp.buf.definition()<CR>", opts)
     vim.keymap.set('n', '<leader>s', "<cmd>belowright split | lua vim.lsp.buf.definition()<CR>", opts)
 
-    vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
+    vim.keymap.set('n', 'gr', function () require('fzf-lua').lsp_references() end, opts)
     vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
     vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
-    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
+    vim.keymap.set('n', 'gi', function () require('fzf-lua').lsp_implementations() end, opts)
     vim.keymap.set('n', '<leader>cl', vim.lsp.codelens.run, opts)
     vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
     vim.keymap.set({'n', 'v'}, '<leader>ca', vim.lsp.buf.code_action, opts)
