@@ -120,7 +120,7 @@ require("lazy").setup({
   },
 
   -- Tree Sitter
-    { 
+  { 
     'nvim-treesitter/nvim-treesitter',
     dependencies = {
       'nvim-treesitter/nvim-treesitter-textobjects',
@@ -130,25 +130,8 @@ require("lazy").setup({
     config = function()
       require('nvim-treesitter.configs').setup({
         ensure_installed = {
-          'bash',
-          'dockerfile',
-          'fish',
-          'go',
-          'gomod',
-          'helm',
-          'html',
-          'java',
-          'javascript',
-          'json',
-          'markdown',
-          'markdown_inline',
-          'nginx',
-          'python',
-          'sql',
-          'terraform',
-          'toml',
-          'vim',
-          'vimdoc',
+          'bash', 'dockerfile', 'fish', 'go', 'gomod', 'helm', 'html', 'java', 'javascript', 'json',
+          'markdown', 'markdown_inline', 'nginx', 'python', 'sql', 'terraform', 'toml', 'vim', 'vimdoc',
           'yaml',
         },
         indent = { enable = true },
@@ -225,6 +208,30 @@ require("lazy").setup({
           },
         },
       })
+    end,
+  },
+
+  -- Treesitter Context
+  {
+    "nvim-treesitter/nvim-treesitter-context",
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
+    opts = {
+      enable = true,
+      mode = "cursor",
+      max_lines = 4,
+      trim_scope = "outer",
+      min_window_height = 8,
+      separator = "─",
+      patterns = {
+        go = {
+          "function_declaration",
+          "method_declaration",
+          "type_declaration",
+        },
+      },
+    },
+    config = function(_, opts)
+      require("treesitter-context").setup(opts)
     end,
   },
 
