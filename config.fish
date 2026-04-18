@@ -21,6 +21,7 @@ alias cls="clear"
 # ==============
 #   Git
 # ==============
+alias gb="git branch"
 alias gs="git status"
 alias gpl="git pull"
 alias gps="git push -f"
@@ -28,6 +29,7 @@ alias gc="git add . && git commit -am "
 alias gcf="git add . && git commit -m 'f'"
 alias gd="git diff"
 alias gl="git log --oneline --graph --decorate --all -n 10"
+alias grom="gir rebase origin/master"
 alias gcm="git checkout master"
 alias gr="git rebase -i HEAD~2"
 alias gr3="git rebase -i HEAD~3"
