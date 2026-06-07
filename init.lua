@@ -235,9 +235,6 @@ require("lazy").setup({
     end,
   },
 
-  -- Search selection via *
-  { 'bronson/vim-visual-star-search' },
-
   -- Git
   {
     'dinhhuy258/git.nvim',
