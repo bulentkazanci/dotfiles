@@ -11,15 +11,6 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
--- run :GoBuild or :GoTestCompile based on the go file
-local function build_go_files()
-  if vim.endswith(vim.api.nvim_buf_get_name(0), "_test.go") then
-    vim.cmd("GoTestCompile")
-  else
-    vim.cmd("GoBuild")
-  end
-end
-
 ----------------
 --  Plugins 
 ----------------
@@ -103,20 +94,13 @@ require("lazy").setup({
 
   -- Golang
   {
-    "fatih/vim-go",
-    config = function ()
-      -- we disable most of these features because treesitter and nvim-lsp
-      -- take care of it
-      vim.g['go_gopls_enabled'] = 0
-      vim.g['go_code_completion_enabled'] = 0
-      vim.g['go_fmt_autosave'] = 0
-      vim.g['go_imports_autosave'] = 0
-      vim.g['go_mod_fmt_autosave'] = 0
-      vim.g['go_doc_keywordprg_enabled'] = 0
-      vim.g['go_def_mapping_enabled'] = 0
-      vim.g['go_textobj_enabled'] = 0
-      vim.g['go_list_type'] = 'quickfix'
-    end,
+    "olexsmir/gopher.nvim",
+    ft = "go",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "nvim-treesitter/nvim-treesitter",
+    },
+    opts = {},
   },
 
   -- Tree Sitter
@@ -685,11 +669,9 @@ vim.api.nvim_create_user_command("GBrowse", 'lua require("git.browse").open(true
 vim.keymap.set('n', '<leader>n', ':NvimTreeToggle<CR>', { noremap = true })
 vim.keymap.set('n', '<leader>f', ':NvimTreeFindFileToggle!<CR>', { noremap = true })
 
--- vim-go
-vim.keymap.set('n', '<leader>b', build_go_files)
-vim.api.nvim_create_user_command("A", ":lua vim.api.nvim_call_function('go#alternate#Switch', {true, 'edit'})<CR>", {})
-vim.api.nvim_create_user_command("AV", ":lua vim.api.nvim_call_function('go#alternate#Switch', {true, 'vsplit'})<CR>", {})
-vim.api.nvim_create_user_command("AS", ":lua vim.api.nvim_call_function('go#alternate#Switch', {true, 'split'})<CR>", {})
+-- mapping shortcuts for Gopher:
+vim.keymap.set('n', '<leader>gs', '<cmd>GoTagAdd json<CR>', { desc = "Add JSON tags" })
+vim.keymap.set('n', '<leader>ge', '<cmd>GoIfErr<CR>', { desc = "Add if err" })
 
 -- Go uses gofmt, which uses tabs for indentation and spaces for aligment.
 -- Hence override our indentation rules.
