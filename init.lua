@@ -33,43 +33,14 @@ require("lazy").setup({
 
   -- Greeting Screen
   {
-    "goolord/alpha-nvim",
-    dependencies = {
-      "nvim-tree/nvim-web-devicons",
+    "folke/snacks.nvim",
+    priority = 1000,
+    lazy = false,
+    opts = {
+      dashboard = { enabled = true },
+      bigfile = { enabled = true },
+      words = { enabled = true },
     },
-
-    config = function()
-      local alpha = require("alpha")
-      local dashboard = require("alpha.themes.dashboard")
-
-      dashboard.section.header.val = {
-        [[                                                                       ]],
-        [[                                                                       ]],
-        [[                                                                       ]],
-        [[                                                                       ]],
-        [[                                                                     ]],
-        [[       ████ ██████           █████      ██                     ]],
-        [[      ███████████             █████                             ]],
-        [[      █████████ ███████████████████ ███   ███████████   ]],
-        [[     █████████  ███    █████████████ █████ ██████████████   ]],
-        [[    █████████ ██████████ █████████ █████ █████ ████ █████   ]],
-        [[  ███████████ ███    ███ █████████ █████ █████ ████ █████  ]],
-        [[ ██████  █████████████████████ ████ █████ █████ ████ ██████ ]],
-        [[                                                                       ]],
-        [[                                                                       ]],
-        [[                                                                       ]],
-      }
-
-      dashboard.section.buttons.val = {
-        dashboard.button( "e", "  > New file" , ":ene <BAR> startinsert <CR>"),
-        dashboard.button( "f", "  > Find file", ":cd $HOME/Brkdev | Telescope find_files<CR>"),
-        dashboard.button( "r", "  > Recent"   , ":Telescope oldfiles<CR>"),
-        dashboard.button( "s", "  > Settings" , ":e $MYVIMRC | :cd %:p:h | split . | wincmd k | pwd<CR>"),
-        dashboard.button( "q", "  > Quit", ":qa<CR>"),
-      }
-
-      alpha.setup(dashboard.opts)
-    end,
   },
 
   -- Status Line
@@ -221,10 +192,23 @@ require("lazy").setup({
 
   -- Git
   {
-    'dinhhuy258/git.nvim',
-    config = function ()
-      require("git").setup()
-    end,
+    'lewis6991/gitsigns.nvim',
+    opts = {
+      signs = {
+        add          = { text = '┃' },
+        change       = { text = '┃' },
+        delete       = { text = '_' },
+        topdelete    = { text = '‾' },
+        changedelete = { text = '~' },
+        untracked    = { text = '┆' },
+      },
+    }
+  },
+
+  {
+    'ruifm/gitlinker.nvim',
+    dependencies = { 'nvim-lua/plenary.nvim' },
+    opts = {},
   },
 
   -- File explorer
@@ -283,8 +267,14 @@ require("lazy").setup({
     end,
   },
 
-  { 
-    "AndrewRadev/splitjoin.vim"
+  {
+    "Wansmer/treesj",
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
+    config = function()
+      require('treesj').setup({
+        use_default_keymaps = true,
+      })
+    end,
   },
 
   {
@@ -305,8 +295,7 @@ require("lazy").setup({
   {
     'brianhuster/live-preview.nvim',
     dependencies = {
-      'ibhagwan/fzf-lua',
-      'folke/snacks.nvim',
+      'ibhagwan/fzf-lua'
     },
   },
 
@@ -653,17 +642,11 @@ vim.api.nvim_create_autocmd("BufWinEnter", {
 })
 
 -- git.nvim
-vim.keymap.set('n', '<leader>gb', '<CMD>lua require("git.blame").blame()<CR>')
-vim.keymap.set('n', '<leader>go', "<CMD>lua require('git.browse').open(false)<CR>")
-vim.keymap.set('x', '<leader>go', ":<C-u> lua require('git.browse').open(true)<CR>")
-vim.keymap.set('n', '<leader>gid', '<CMD>lua require("git.diff").open()<CR>')
-
--- old habits 
-vim.api.nvim_create_user_command("GBrowse", 'lua require("git.browse").open(true)<CR>', {
-  range = true,
-  bang = true,
-  nargs = "*",
-})
+vim.keymap.set('n', '<leader>gb', function() require('gitsigns').blame_line({full=true}) end, { desc = "Git Blame" })
+vim.keymap.set('n', '<leader>go', function() require('gitlinker').get_buf_range_url('n') end, { silent = true, desc = "Git Browse" })
+vim.keymap.set('x', '<leader>go', function() require('gitlinker').get_buf_range_url('v') end, { silent = true, desc = "Git Browse Selection" })
+vim.keymap.set('n', '<leader>gid', '<cmd>Gitsigns diffthis<CR>', { desc = "Git Diff Split" })
+vim.api.nvim_create_user_command("GBrowse", function() require('gitlinker').get_buf_range_url('n') end, {})
 
 -- File-tree mappings
 vim.keymap.set('n', '<leader>n', ':NvimTreeToggle<CR>', { noremap = true })
