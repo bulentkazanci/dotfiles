@@ -387,6 +387,34 @@ require("lazy").setup({
       local servers = {
         gopls = {
           capabilities = capabilities,
+          settings = {
+            gopls = {
+              gofumpt = true,
+              staticcheck = true,
+              completeUnimported = true,
+              usePlaceholders = true,
+              analyses = {
+                unusedvariable = true,
+                unusedparams = true,
+                shadow = true,
+                nilness = true,
+                unusedwrite = true,
+              },
+              hints = {
+                assignVariableTypes = true,
+                compositeLiteralFields = true,
+                compositeLiteralTypes = true,
+                constantValues = true,
+                parameterNames = true,
+              },
+              codelenses = {
+                test = true,
+                tidy = true,
+                generate = true,
+              },
+            },
+          },
+
         },
         lua_ls = {
           settings = {
@@ -708,8 +736,17 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
--- disable diagnostics, I didn't like them
-vim.lsp.handlers["textDocument/publishDiagnostics"] = function() end
+-- enable diagnostics
+vim.diagnostic.config({
+  virtual_text = {
+    spacing = 4,
+    prefix = "●",
+  },
+  signs = true,
+  underline = true,
+  update_in_insert = false,
+  severity_sort = true,
+})
 
 -- Run gofmt/gofmpt, import packages automatically on save
 vim.api.nvim_create_autocmd('BufWritePre', {
