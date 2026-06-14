@@ -213,44 +213,82 @@ require("lazy").setup({
 
   -- File explorer
   {
-    "nvim-tree/nvim-tree.lua",
-    version = "*",
-    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    "nvim-neo-tree/neo-tree.nvim",
+    branch = "v3.x",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "nvim-tree/nvim-web-devicons",
+      "MunifTanjim/nui.nvim",
+    },
+    lazy = false,
+
     config = function()
-      require("nvim-tree").setup({
-        sort_by = "case_sensitive",
-        filters = {
-          dotfiles = false,
+      require("neo-tree").setup({
+        close_if_last_window = true,
+
+        popup_border_style = "rounded",
+
+        enable_git_status = true,
+        enable_diagnostics = true,
+
+        filesystem = {
+          follow_current_file = {
+            enabled = true,
+            leave_dirs_open = true,
+          },
+
+          bind_to_cwd = true,
+          respect_buf_cwd = true,
+
+          use_libuv_file_watcher = true,
+
+          filtered_items = {
+            visible = false,
+            hide_dotfiles = false,
+            hide_gitignored = false,
+          },
         },
-        on_attach = function(bufnr)
-          local api = require('nvim-tree.api')
 
-          local function opts(desc)
-            return {
-              desc = 'nvim-tree: ' .. desc,
-              buffer = bufnr,
-              noremap = true,
-              silent = true,
-              nowait = true,
-            }
-          end
+        window = {
+          position = "left",
+          width = 32,
 
-          api.config.mappings.default_on_attach(bufnr)
+          mappings = {
+            ["<space>"] = "toggle_node",
+            ["<cr>"] = "open",
+            ["t"] = "open_tabnew",
+            ["s"] = "open_split",
+            ["v"] = "open_vsplit",
+          },
+        },
 
-          -- vim.keymap.set('n', 't', api.node.open.tab, opts('Open: New Tab'))
-          vim.keymap.set('n', 't', function()
-            local api = require("nvim-tree.api")
-            local node = api.tree.get_node_under_cursor()
-            vim.cmd("tabnew " .. vim.fn.fnameescape(node.absolute_path))
-          end, opts('Open: New Tab'))
-          vim.keymap.set('n', 's', api.node.open.vertical, opts('Open: Vertical Split'))
-          vim.keymap.set('n', 'i', api.node.open.horizontal, opts('Open: Horizontal Split'))
-          vim.keymap.set('n', 'u', api.tree.change_root_to_parent, opts('Up'))
-          vim.keymap.set('n', '<leader>h', '<C-w>h', { desc = "Move left pane" })
-          vim.keymap.set('n', '<leader>j', '<C-w>j', { desc = "Move down pane" })
-          vim.keymap.set('n', '<leader>k', '<C-w>k', { desc = "Move up pane" })
-          vim.keymap.set('n', '<leader>l', '<C-w>l', { desc = "Move right pane" })
-        end
+        default_component_configs = {
+          indent = {
+            with_markers = true,
+            indent_size = 2,
+          },
+          git_status = {
+            symbols = {
+              added = "✚",
+              modified = "",
+              deleted = "✖",
+              renamed = "󰁕",
+              untracked = "",
+              ignored = "",
+            },
+          },
+        },
+      })
+
+      -- Keymaps
+      vim.keymap.set("n", "<leader>n", "<cmd>Neotree toggle<cr>")
+      vim.keymap.set("n", "<leader>f", "<cmd>Neotree reveal<cr>")
+
+      -- Keep tree open on new tabs
+      vim.api.nvim_create_autocmd("TabNewEntered", {
+        callback = function()
+          vim.cmd("Neotree show")
+        end,
       })
     end,
   },
@@ -541,10 +579,6 @@ require("lazy").setup({
 --- SETTINGS ---
 ----------------
 
--- disable netrw at the very start of our init.lua, because we use nvim-tree
-vim.g.loaded_netrw = 1
-vim.g.loaded_netrwPlugin = 1
-
 vim.opt.termguicolors = true -- Enable 24-bit RGB colors
 
 vim.opt.number = true        -- Don't show line numbers
@@ -644,10 +678,10 @@ vim.keymap.set("x", "p", "\"_dP")
 vim.keymap.set("n", "<leader>rw", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
 
 -- Better split switching
-vim.keymap.set('', '<C-j>', '<C-W>j')
-vim.keymap.set('', '<C-k>', '<C-W>k')
-vim.keymap.set('', '<C-h>', '<C-W>h')
-vim.keymap.set('', '<C-l>', '<C-W>l')
+vim.keymap.set('', '<leader>j', '<C-W>j')
+vim.keymap.set('', '<leader>k', '<C-W>k')
+vim.keymap.set('', '<leader>h', '<C-W>h')
+vim.keymap.set('', '<leader>l', '<C-W>l')
 
 -- Visual linewise up and down by default (and use gj gk to go quicker)
 vim.keymap.set('n', '<Up>', 'gk')
@@ -677,8 +711,8 @@ vim.keymap.set('n', '<leader>gid', '<cmd>Gitsigns diffthis<CR>', { desc = "Git D
 vim.api.nvim_create_user_command("GBrowse", function() require('gitlinker').get_buf_range_url('n') end, {})
 
 -- File-tree mappings
-vim.keymap.set('n', '<leader>n', ':NvimTreeToggle<CR>', { noremap = true })
-vim.keymap.set('n', '<leader>f', ':NvimTreeFindFileToggle!<CR>', { noremap = true })
+vim.keymap.set("n", "<leader>n", "<cmd>Neotree toggle<cr>")
+vim.keymap.set("n", "<leader>f", "<cmd>Neotree reveal<cr>")
 
 -- mapping shortcuts for Gopher:
 vim.keymap.set('n', '<leader>gs', '<cmd>GoTagAdd json<CR>', { desc = "Add JSON tags" })
@@ -770,14 +804,12 @@ vim.api.nvim_create_autocmd('BufWritePre', {
   end
 })
 
--- File Tree
-vim.api.nvim_create_autocmd({ "TabNew" }, {
+-- Show file tree on new tab
+vim.api.nvim_create_autocmd("TabNewEntered", {
   callback = function()
-    require("nvim-tree.api").tree.open()
-    vim.cmd("wincmd p")  -- move focus back to previous window
+    vim.cmd("Neotree show")
   end,
 })
-
 
 -- File finder
 vim.keymap.set("n", "<C-p>", require("fzf-lua").git_files, {})
