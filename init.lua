@@ -40,11 +40,12 @@ require("lazy").setup({
       dashboard = { enabled = true },
       bigfile = { enabled = true },
       words = { enabled = true },
+      explorer = { enabled = true},
     },
   },
 
   -- Status Line
-  { 
+  {
     "nvim-lualine/lualine.nvim",
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     config = function ()
@@ -75,7 +76,7 @@ require("lazy").setup({
   },
 
   -- Tree Sitter
-  { 
+  {
     'nvim-treesitter/nvim-treesitter',
     dependencies = {
       'nvim-treesitter/nvim-treesitter-textobjects',
@@ -282,7 +283,6 @@ require("lazy").setup({
 
       -- Keymaps
       vim.keymap.set("n", "<leader>n", "<cmd>Neotree toggle<cr>")
-      vim.keymap.set("n", "<leader>f", "<cmd>Neotree reveal<cr>")
 
       -- Keep tree open on new tabs
       vim.api.nvim_create_autocmd("TabNewEntered", {
@@ -317,14 +317,13 @@ require("lazy").setup({
 
   {
     "windwp/nvim-autopairs",
-    config = function() 
+    config = function()
       local npairs = require("nvim-autopairs")
       npairs.setup {
         check_ts = true,
       }
 
       -- Remove backtick pairing
-      local Rule = require('nvim-autopairs.rule')
       npairs.remove_rule('`')
     end
   },
@@ -337,12 +336,12 @@ require("lazy").setup({
     },
   },
 
-  -- { -- Fuzzy Finder (files, lsp, etc)
+  -- Fuzzy Finder (files, lsp, etc)
   {
     "ibhagwan/fzf-lua",
     dependencies = { "nvim-tree/nvim-web-devicons" },
     opts = {},
-    config = function() 
+    config = function()
       require("fzf-lua").register_ui_select()
       require('fzf-lua').setup {
         oldfiles = {
@@ -359,7 +358,7 @@ require("lazy").setup({
             hidden = false,
             border = "rounded",
             layout = "vertical",
-            vertical = "down:60%",
+            vertical = "down:70%",
             title = true,
             title_pos = "center",
           },
@@ -380,7 +379,16 @@ require("lazy").setup({
           cwd_header = false,
           cwd_prompt = true,
           file_icons = true,
-        }
+        },
+        keymap = {
+          fzf = {
+            ["ctrl-p"] = "up",
+            ["ctrl-n"] = "down",
+            ["ctrl-j"] = "preview-page-down",
+            ["ctrl-k"] = "preview-page-up",
+
+          }
+        },
       }
 
     end
@@ -505,7 +513,7 @@ require("lazy").setup({
     dependencies = { 'rafamadriz/friendly-snippets' },
     version = '1.*',
     opts = {
-      keymap = { 
+      keymap = {
         preset = 'enter',
         ["<Tab>"] = { "select_next", "snippet_forward", "fallback" },
         ["<S-Tab>"] = { "select_next", "snippet_forward", "fallback" },
