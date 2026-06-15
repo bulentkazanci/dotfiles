@@ -40,7 +40,7 @@ require("lazy").setup({
       dashboard = { enabled = true },
       bigfile = { enabled = true },
       words = { enabled = true },
-      explorer = { enabled = true},
+      scroll = { enabled = true }, -- Save last cursor position
     },
   },
 
@@ -289,18 +289,6 @@ require("lazy").setup({
         callback = function()
           vim.cmd("Neotree show")
         end,
-      })
-    end,
-  },
-
-  -- Save last cursor position
-  {
-    "ethanholz/nvim-lastplace",
-    config = function()
-      require("nvim-lastplace").setup({
-        lastplace_ignore_buftype = {"quickfix", "nofile", "help"},
-        lastplace_ignore_filetype = {"gitcommit", "gitrebase", "svn", "hgcommit"},
-        lastplace_open_folds = true
       })
     end,
   },
