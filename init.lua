@@ -1,3 +1,7 @@
+-- This comes first, because we have mappings that depend on leader
+-- With a map leader it's possible to do extra key combinations
+vim.g.mapleader = ','
+
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system({
@@ -328,6 +332,12 @@ require("lazy").setup({
   {
     "ibhagwan/fzf-lua",
     dependencies = { "nvim-tree/nvim-web-devicons" },
+    keys = {
+      { "<C-p>", function() require("fzf-lua").git_files() end, desc = "Find Git Files" },
+      { "<C-b>", function() require("fzf-lua").files() end, desc = "Find All Files" },
+      { "<leader>gg", function() require("fzf-lua").live_grep() end, desc = "Live Grep" },
+      { "<leader>gs", function() require("fzf-lua").grep_cword() end, desc = "Grep Current Word" },
+    },
     opts = {},
     config = function()
       require("fzf-lua").register_ui_select()
@@ -604,11 +614,6 @@ vim.opt.tabstop = 2       -- number of spaces a TAB counts for
 vim.opt.autoindent = true -- copy indent from current line when starting a new line
 vim.opt.wrap = true
 
--- This comes first, because we have mappings that depend on leader
--- With a map leader it's possible to do extra key combinations
--- i.e: <leader>w saves the current file
-vim.g.mapleader = ','
-
 -- Fast saving
 vim.keymap.set('n', '<Leader>w', ':write!<CR>')
 vim.keymap.set('n', '<Leader>q', ':q!<CR>', { silent = true })
@@ -807,12 +812,6 @@ vim.api.nvim_create_autocmd("TabNewEntered", {
   end,
 })
 
--- File finder
-vim.keymap.set("n", "<C-p>", require("fzf-lua").git_files, {})
-vim.keymap.set("n", "<C-b>", require("fzf-lua").files, {})
-vim.keymap.set("n", "<leader>gg", function() require("fzf-lua").live_grep() end, {})
-vim.keymap.set("n", "<leader>gs", function() require("fzf-lua").grep_cword() end, {})
-
 -- Use LspAttach autocommand to only map the following keys
 -- after the language server attaches to the current buffer
 vim.api.nvim_create_autocmd('LspAttach', {
@@ -823,8 +822,14 @@ vim.api.nvim_create_autocmd('LspAttach', {
     local opts = { buffer = ev.buf }
 
     vim.keymap.set('n', 'gd', function () require('fzf-lua').lsp_definitions() end, opts)
-    vim.keymap.set('n', '<leader>v', "<cmd>vsplit | lua vim.lsp.buf.definition()<CR>", opts)
-    vim.keymap.set('n', '<leader>s', "<cmd>belowright split | lua vim.lsp.buf.definition()<CR>", opts)
+    vim.keymap.set('n', '<leader>v', function() require('fzf-lua').lsp_definitions({
+      jump_to_single = true,
+      winopts = { split = "vsplit" }
+    }) end, opts)
+    vim.keymap.set('n', '<leader>s', function() require('fzf-lua').lsp_definitions({
+      jump_to_single = true,
+      winopts = { split = "belowright split" }
+    }) end, opts)
 
     vim.keymap.set('n', 'gr', function () require('fzf-lua').lsp_references() end, opts)
     vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
