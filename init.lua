@@ -361,6 +361,21 @@ require("lazy").setup({
             title_pos = "center",
           },
         },
+        actions = {
+          files = {
+            ["default"] = require('fzf-lua').actions.file_edit,
+            ["ctrl-s"]   = require('fzf-lua').actions.file_split,
+            ["ctrl-v"]   = require('fzf-lua').actions.file_vsplit,
+            ["ctrl-q"]   = require('fzf-lua').actions.file_sel_to_qf,
+            -- Force tabedit to populate content correctly
+            ["ctrl-t"]   = function(selected, opts)
+              if selected and selected[1] then
+                local file = require('fzf-lua').path.entry_to_file(selected[1], opts).path
+                vim.cmd('tabedit ' .. vim.fn.fnameescape(file))
+              end
+            end,
+          }
+        },
         git = {
           files = {
             cwd_header = false,
@@ -384,7 +399,6 @@ require("lazy").setup({
             ["ctrl-n"] = "down",
             ["ctrl-j"] = "preview-page-down",
             ["ctrl-k"] = "preview-page-up",
-
           }
         },
       }
