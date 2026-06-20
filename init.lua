@@ -704,20 +704,22 @@ vim.api.nvim_create_autocmd("BufWinEnter", {
   end
 })
 
+-- open terminal pane
+vim.keymap.set('n', '<leader>ter', '<cmd>belowright 15split | terminal<CR>i', { desc = "Open Terminal Pane" })
+
 -- git.nvim
-vim.keymap.set('n', '<leader>gb', function() require('gitsigns').blame_line({full=true}) end, { desc = "Git Blame" })
+vim.keymap.set('n', 'gib', function() require('gitsigns').blame() end, { desc = "Git Blame" })
+vim.keymap.set('n', 'gid', function() require('fzf-lua').git_diff() end, { desc = "Git Diff "})
 vim.keymap.set('n', '<leader>go', function() require('gitlinker').get_buf_range_url('n') end, { silent = true, desc = "Git Browse" })
 vim.keymap.set('x', '<leader>go', function() require('gitlinker').get_buf_range_url('v') end, { silent = true, desc = "Git Browse Selection" })
-vim.keymap.set('n', '<leader>gid', '<cmd>Gitsigns diffthis<CR>', { desc = "Git Diff Split" })
 vim.api.nvim_create_user_command("GBrowse", function() require('gitlinker').get_buf_range_url('n') end, {})
 
 -- File-tree mappings
 vim.keymap.set("n", "<leader>n", "<cmd>Neotree toggle<cr>")
-vim.keymap.set("n", "<leader>f", "<cmd>Neotree reveal<cr>")
 
 -- mapping shortcuts for Gopher:
-vim.keymap.set('n', '<leader>gs', '<cmd>GoTagAdd json<CR>', { desc = "Add JSON tags" })
-vim.keymap.set('n', '<leader>ge', '<cmd>GoIfErr<CR>', { desc = "Add if err" })
+vim.keymap.set('n', '<leader>got', '<cmd>GoTagAdd json<CR>', { desc = "Add JSON tags" })
+vim.keymap.set('n', '<leader>goi', '<cmd>GoIfErr<CR>', { desc = "Add if err" })
 
 -- Go uses gofmt, which uses tabs for indentation and spaces for aligment.
 -- Hence override our indentation rules.
