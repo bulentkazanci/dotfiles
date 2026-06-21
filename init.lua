@@ -724,6 +724,7 @@ vim.keymap.set('n', '<leader>ter', '<cmd>belowright 15split | terminal<CR>i', { 
 -- git.nvim
 vim.keymap.set('n', 'gib', function() require('gitsigns').blame() end, { desc = "Git Blame" })
 vim.keymap.set('n', 'gid', function() require('fzf-lua').git_diff() end, { desc = "Git Diff "})
+vim.keymap.set('n', 'gis', function() require('fzf-lua').git_status() end, { desc = "Git Status "})
 vim.keymap.set('n', '<leader>go', function() require('gitlinker').get_buf_range_url('n') end, { silent = true, desc = "Git Browse" })
 vim.keymap.set('x', '<leader>go', function() require('gitlinker').get_buf_range_url('v') end, { silent = true, desc = "Git Browse Selection" })
 vim.api.nvim_create_user_command("GBrowse", function() require('gitlinker').get_buf_range_url('n') end, {})

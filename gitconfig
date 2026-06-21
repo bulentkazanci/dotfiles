@@ -1,7 +1,6 @@
 [user]
   name = Buelent Rahim Kazanci
   email = kazancibulent@gmail.com
-	signingkey = E1B27F75FC996685
 [color]
   ui = auto
 [github]
@@ -10,3 +9,5 @@
 	default = tracking
 [commit]
 	gpgsign = true
+[include]
+  path = ~/.gitconfig.local
